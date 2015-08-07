@@ -17,7 +17,4 @@ Says the original author,
 The ``parT`` fork replaces acceptance of tabs, because sometimes you
 work on other people's code and you don't have a choice, and mostly
 because they're shouldn't be a religion behind one person's choice of
-leading whitespace. That's even worse than hating on Vim or hating on
-Emacs, or hating on both. Be a fellow of the computership. Support your
-comrades' life choices. Sheesh.
-
+leading whitespace.
