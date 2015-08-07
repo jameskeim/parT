@@ -95,8 +95,8 @@ OBJS = buffer$O charset$O errmsg$O par$O reformat$O
 .c$O:
 	$(CC) $<
 
-par$E: $(OBJS)
-	$(LINK1) $(OBJS) $(LINK2) par$E
+parT$E: $(OBJS)
+	$(LINK1) $(OBJS) $(LINK2) parT$E
 
 buffer$O: buffer.c buffer.h errmsg.h
 
@@ -104,9 +104,9 @@ charset$O: charset.c charset.h errmsg.h buffer.h
 
 errmsg$O: errmsg.c errmsg.h
 
-par$O: par.c charset.h errmsg.h buffer.h reformat.h
+parT$O: par.c charset.h errmsg.h buffer.h reformat.h
 
 reformat$O: reformat.c reformat.h errmsg.h buffer.h
 
 clean:
-	$(RM) par $(OBJS) $(JUNK)
+	$(RM) parT $(OBJS) $(JUNK)
