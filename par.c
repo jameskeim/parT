@@ -1,9 +1,12 @@
-/*********************/
-/* par.c             */
-/* for Par 1.52      */
-/* Copyright 2001 by */
-/* Adam M. Costello  */
-/*********************/
+/*****************************/
+/* par.c                     */
+/* for parT, based on        */
+/* Par 1.52                  */
+/* Copyright 2001 by         */
+/* Adam M. Costello          */
+/*                           */
+/* Search parT for changes   */
+/*****************************/
 
 /* This is ANSI C code (C89). */
 
@@ -25,6 +28,11 @@
 #define free(ptr)
 #endif
 
+// [parT]
+// FIXME: Pass in tab stop as param.
+int tab_size = 4;
+// MEH: Global!
+int tab_count = 0;
 
 /*===
 
@@ -307,6 +315,9 @@ static char **readlines(
        *oldln = NULL, *oldqpend = NULL, *p, *op, *vln = NULL, **lines = NULL;
   lineprop vprop = { 0, 0, 0, '\0' }, iprop = { 0, 0, 0, '\0' };
 
+  // [parT]
+  int still_tabs = 1;
+
   /* oldqsonly, oldln, and oldquend don't really need to be initialized.   */
   /* They are initialized only to appease compilers that try to be helpful */
   /* by issuing warnings about unitialized automatic variables.            */
@@ -327,6 +338,17 @@ static char **readlines(
     c = getchar();
     if (c == EOF) break;
     *(unsigned char *)&ch = c;
+    // [parT]
+    if (firstline) {
+      if (still_tabs) {
+        if (ch == '\t') {
+          tab_count += 1;
+        }
+        else {
+          still_tabs = 0;
+        }
+      }
+    }
     if (ch == '\n') {
       if (blank) {
         ungetc(c,stdin);
@@ -396,14 +418,17 @@ static char **readlines(
       }
       if (!ch) continue;
       if (ch == '\t') {
+        /* [parT] demands tabs
         ch = ' ';
         for (i = Tab - numitems(cbuf) % Tab;  i > 0;  --i) {
           additem(cbuf, &ch, errmsg);
           if (*errmsg) goto rlcleanup;
         }
         continue;
+        */
+        ch = '\t';
       }
-      if (isspace(c)) ch = ' ';
+      else if (isspace(c)) ch = ' ';
       else blank = 0;
       additem(cbuf, &ch, errmsg);
       if (*errmsg) goto rlcleanup;
@@ -797,6 +822,12 @@ int main(int argc, const char * const *argv)
     inlines =
       readlines(&props, protectchars, quotechars, Tab, invis, quote, errmsg);
     if (*errmsg) goto parcleanup;
+
+    // [parT] brings tabs to life!
+    if (tab_count > 0) {
+      // MAGIC_VALUE: Subtract one to leave a spot for the tab.
+      width -= (tab_count * (tab_size - 1));
+    }
 
     for (endline = inlines;  *endline;  ++endline);
     if (endline == inlines) {
